@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-20 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto p-6 border border-gray-300 w-full max-w-md shadow-lg rounded-lg bg-white">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Edit Event</h2>
+        <form method="post" action="{% url 'edit_event' event.id %}">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {{ form.as_p }}
+            </div>
+            <div class="flex justify-end mt-6">
+                <button type="button" onclick="window.history.back()"
+                        class="mr-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form .space-y-4 > * {
+        margin-bottom: 1rem;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"],
+    form textarea,
+    form select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.375rem;
+        transition: border-color 0.3s;
+    }
+
+    form input[type="text"]:focus,
+    form input[type="email"]:focus,
+    form input[type="password"]:focus,
+    form textarea:focus,
+    form select:focus {
+        border-color: #3182ce;
+        outline: none;
+    }
+
+    form label {
+        font-weight: 600;
+        color: #4a5568;
+    }
+</style>
+{% endblock %}

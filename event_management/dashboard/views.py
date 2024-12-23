@@ -85,7 +85,17 @@ class EventViewSet(viewsets.ModelViewSet):
         attendee = get_object_or_404(Attendee, id=attendee_id)
         event.attendees.remove(attendee)
         return Response({'status': 'attendee removed'})
-
+    
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('task_list')
+    else:
+        form = TaskForm(instance=task)
+    return render(request, 'dashboard/edit_task.html', {'form': form, 'task': task})
 class AttendeeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Attendee.objects.all()
@@ -108,3 +118,36 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({'status': 'task status updated'})
         return Response({'error': 'Invalid status'}, 
                       status=status.HTTP_400_BAD_REQUEST)
+    
+class TaskViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        return Task.objects.filter(event__created_by=self.request.user)
+
+    @action(detail=True, methods=['patch'])
+    def update_status(self, request, pk=None):
+        task = self.get_object()
+        status = request.data.get('status')
+        if status in dict(Task.STATUS_CHOICES):
+            task.status = status
+            task.save()
+
+            # Fetch updated progress data
+            events = Event.objects.all()
+            event_progress = []
+            for event in events:
+                tasks = Task.objects.filter(event=event)
+                total_tasks = tasks.count()
+                completed_tasks = tasks.filter(status='completed').count()
+                progress_percentage = (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+                event_progress.append({
+                    'event': event.name,
+                    'total_tasks': total_tasks,
+                    'completed_tasks': completed_tasks,
+                    'progress_percentage': progress_percentage
+                })
+
+            return Response({'status': 'task status updated', 'event_progress': event_progress})
+        return Response({'error': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
