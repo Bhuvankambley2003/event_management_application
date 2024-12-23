@@ -3,12 +3,22 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-8 border border-black-300">
+<div class="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg mt-20">
     <h2 class="text-2xl font-bold mb-6">Login</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded">Login</button>
+        <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Login</button>
     </form>
 </div>
+
+<style>
+    input[type="text"], input[type="password"], select, textarea {
+        border: 1px solid #ccc; /* Add border */
+        padding: 0.5rem; /* Add padding */
+        width: 100%; /* Full width */
+        box-sizing: border-box; /* Include padding and border in element's total width and height */
+        margin-bottom: 1rem; /* Add space between fields */
+    }
+</style>
 {% endblock %}
