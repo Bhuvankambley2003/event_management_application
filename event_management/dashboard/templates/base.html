@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management - {% block title %}{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .nav-link {
+            font-size: 1.125rem; /* 18px */
+        }
+        .welcome-text {
+            font-size: 1rem; /* 16px */
+        }
+        .btn {
+            font-size: 1rem; /* 16px */
+        }
+    </style>
+</head>
+<body class="bg-black-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="{% url 'event_list' %}" class="nav-link py-4 px-2 text-black-500 hover:text-blue-500">Events</a>
+                        <a href="{% url 'attendee_list' %}" class="nav-link py-4 px-2 text-black-500 hover:text-blue-500">Attendees</a>
+                        <a href="{% url 'task_list' %}" class="nav-link py-4 px-2 text-black-500 hover:text-blue-500">Tasks</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    {% if user.is_authenticated %}
+                        <span class="welcome-text text-black-500">Welcome, {{ user.username }}</span>
+                        <a href="{% url 'logout' %}" class="btn py-2 px-2 font-medium text-black-500 hover:text-blue-500">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn py-2 px-2 font-medium text-black-500 hover:text-blue-500">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Configure axios defaults
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
