@@ -1,6 +1,6 @@
 # Event Management Application
 
-![Event Management](image.png)
+![Event Management](event.png)
 
 ## Overview
 This project is a Django-based event management system that provides the following features:
